@@ -202,7 +202,7 @@ function App() {
 						</div>
 					</div>
 
-					<div className='card'>
+					{/* <div className='card'>
 						<img
 							width={133}
 							height={112}
@@ -219,7 +219,7 @@ function App() {
 								<img width={11} height={11} src='/img/plus.svg' alt='Plus' />
 							</button>
 						</div>
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</div>
