@@ -47,7 +47,7 @@ function Drawer() {
 					</ul>
 					<button className='greenButton'>
 						Оформить заказ
-						<img src='/img/arrow.svg' />
+						<img src='/img/arrow.svg' alt='Arrow' />
 					</button>
 				</div>
 			</div>
