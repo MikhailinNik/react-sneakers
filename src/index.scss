@@ -120,19 +120,22 @@ header {
 	}
 }
 
-.button-plus {
-	background: #ffffff;
-	border: 1px solid #f2f2f2;
-	border-radius: 8px;
-	width: 32px;
-	height: 32px;
-	cursor: pointer;
-}
-
 .search-block {
 	border: 1px solid #f3f3f3;
 	border-radius: 10px;
 	padding: 0 15px;
+
+	.clear {
+		opacity: 0.5;
+		cursor: pointer;
+		transition: opacity 0.15s ease-in-out;
+		width: 20px;
+		height: 20px;
+		margin-top: 14px;
+		&:hover {
+			opacity: 1;
+		}
+	}
 
 	input {
 		padding: 13px;
