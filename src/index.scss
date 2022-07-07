@@ -12,6 +12,7 @@ body {
 }
 
 .overlay {
+	position: fixed;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -34,6 +35,21 @@ body {
 
 	h2 {
 		margin: 0;
+	}
+
+	.empty-cart {
+		margin: 50px;
+		margin-top: 225px;
+		margin-bottom: 321px;
+
+		h3 {
+			margin-bottom: 9px;
+		}
+
+		p {
+			opacity: 0.4;
+			text-align: center;
+		}
 	}
 
 	.items {
