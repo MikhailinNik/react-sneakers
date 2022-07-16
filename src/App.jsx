@@ -12,26 +12,44 @@ function App() {
 	const [favoriteItems, setFavoriteItems] = React.useState([])
 	const [searchValue, setSearchValue] = React.useState('')
 	const [isCartOpened, setIsCartOpened] = React.useState(false)
+	const [isLoading, setIsLoading] = React.useState(true)
 
 	React.useEffect(() => {
-		axios
-			.get('https://62bf53d70bc9b125616bd1bf.mockapi.io/items')
-			.then(res => setItems(res.data))
-		axios
-			.get('https://62bf53d70bc9b125616bd1bf.mockapi.io/cart')
-			.then(res => setCartItems(res.data))
-		axios
-			.get('https://62bf53d70bc9b125616bd1bf.mockapi.io/favorites')
-			.then(res => setFavoriteItems(res.data))
+		async function fetchData() {
+			setIsLoading(true)
+			const cartResponse = await axios.get(
+				'https://62bf53d70bc9b125616bd1bf.mockapi.io/cart'
+			)
+			const favoriteResponse = await axios.get(
+				'https://62bf53d70bc9b125616bd1bf.mockapi.io/favorites'
+			)
+			const itemsResponse = await axios.get(
+				'https://62bf53d70bc9b125616bd1bf.mockapi.io/items'
+			)
+
+			setIsLoading(false)
+
+			setItems(itemsResponse.data)
+			setCartItems(cartResponse.data)
+			setFavoriteItems(favoriteResponse.data)
+		}
+
+		fetchData()
 	}, [])
 
 	const onAddToCart = async obj => {
 		try {
-			const { data } = await axios.post(
-				'https://62bf53d70bc9b125616bd1bf.mockapi.io/cart',
-				obj
-			)
-			setCartItems(prev => [...prev, data])
+			if (cartItems.find(item => Number(item.id) === Number(obj.id))) {
+				axios.delete(
+					`https://62bf53d70bc9b125616bd1bf.mockapi.io/cart/${obj.id}`
+				)
+				setCartItems(prev =>
+					prev.filter(item => Number(item.id) !== Number(obj.id))
+				)
+			} else {
+				axios.post('https://62bf53d70bc9b125616bd1bf.mockapi.io/cart', obj)
+				setCartItems(prev => [...prev, obj])
+			}
 		} catch (error) {
 			alert('Не удалось добавить в корзину')
 		}
@@ -82,8 +100,10 @@ function App() {
 					onChangeValue={onChangeValue}
 					setSearchValue={setSearchValue}
 					items={items}
+					cartItems={cartItems}
 					onAddToCart={onAddToCart}
 					onAddToFavorite={onAddToFavorite}
+					isLoading={isLoading}
 				/>
 			</Route>
 
