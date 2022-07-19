@@ -1,4 +1,39 @@
+import React from 'react'
+import axios from 'axios'
+
+import { useCart } from '../hooks/useCart'
+import Info from './Info'
+
 function Drawer({ onClose, onRemove, items = [] }) {
+	const { cartItems, setCartItems, totalPrice } = useCart()
+	const [isOrderComplete, setIsOrderComplete] = React.useState(false)
+	const [orderId, setOrderId] = React.useState(null)
+	const [isLoading, setIsLoading] = React.useState(false)
+
+	const onClickOrder = async () => {
+		try {
+			setIsLoading(true)
+			const { data } = await axios.post(
+				'https://62bf53d70bc9b125616bd1bf.mockapi.io/orders',
+				{ items: cartItems }
+			)
+
+			for (let i = 0; i < cartItems.length; i++) {
+				const item = cartItems[i]
+
+				await axios.delete(
+					'https://62bf53d70bc9b125616bd1bf.mockapi.io/cart/' + item.id
+				)
+			}
+
+			setOrderId(data.id)
+			setIsOrderComplete(true)
+			setCartItems([])
+		} catch (error) {
+			alert('К сожалению, ваш заказ не оформился :(')
+		}
+		setIsLoading(false)
+	}
 	return (
 		<div className='overlay'>
 			<div className='drawer'>
@@ -13,7 +48,7 @@ function Drawer({ onClose, onRemove, items = [] }) {
 				</h2>
 
 				{items.length > 0 ? (
-					<div>
+					<div className='d-flex flex-column flex'>
 						<div className='items'>
 							{items.map(obj => (
 								<div
@@ -31,6 +66,7 @@ function Drawer({ onClose, onRemove, items = [] }) {
 									<img
 										onClick={() => onRemove(obj.id)}
 										className='removeBtn'
+										// переименовать в remove
 										src='/img/close.svg'
 										alt='Remove'
 									/>
@@ -43,30 +79,34 @@ function Drawer({ onClose, onRemove, items = [] }) {
 								<li>
 									<span>Итого:</span>
 									<div></div>
-									<b>21 498 руб.</b>
+									<b>{totalPrice} руб.</b>
 								</li>
 								<li>
 									<span>Налог 5%:</span>
 									<div></div>
-									<b>1074 руб.</b>
+									<b>{(totalPrice * 5) / 100} руб.</b>
 								</li>
 							</ul>
-							<button className='greenButton'>
+							<button
+								disabled={isLoading}
+								className='greenButton'
+								onClick={onClickOrder}
+							>
 								Оформить заказ
 								<img src='/img/arrow.svg' alt='Arrow' />
 							</button>
 						</div>
 					</div>
 				) : (
-					<div className='empty-cart d-flex flex-column align-center'>
-						<img src='/img/cart.jpg' alt='Cart' />
-						<h3>Корзина пустая</h3>
-						<p>Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.</p>
-						<button onClick={onClose} className='greenButton'>
-							Вернуться назад
-							<img src='/img/arrow.svg' alt='Arrow' />
-						</button>
-					</div>
+					<Info
+						title={isOrderComplete ? 'Заказ оформлен!' : 'Корзина пустая'}
+						description={
+							isOrderComplete
+								? `Ваш заказ #${orderId} скоро будет передан курьерской доставке`
+								: 'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'
+						}
+						image={isOrderComplete ? '/img/order-success.jpg' : '/img/cart.jpg'}
+					/>
 				)}
 			</div>
 		</div>
