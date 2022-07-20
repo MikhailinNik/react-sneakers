@@ -5,6 +5,7 @@ import Drawer from './components/Drawer'
 import Header from './components/Header'
 import Home from './pages/Home'
 import Favorite from './pages/Favorite'
+import Orders from './pages/Orders'
 import AppContext from './context'
 
 function App() {
@@ -94,6 +95,7 @@ function App() {
 				favoriteItems,
 				isItemAdded,
 				onAddToFavorite,
+				onAddToCart,
 				setIsCartOpened,
 				setCartItems,
 				setIsLoading,
@@ -125,6 +127,10 @@ function App() {
 
 				<Route exact path='/favorite'>
 					<Favorite onAddToFavorite={onAddToFavorite} />
+				</Route>
+
+				<Route exact path='/orders'>
+					<Orders onAddToFavorite={onAddToFavorite} />
 				</Route>
 			</div>
 		</AppContext.Provider>
