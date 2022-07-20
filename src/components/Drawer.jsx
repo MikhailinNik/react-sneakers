@@ -31,6 +31,7 @@ function Drawer({ onClose, onRemove, items = [] }) {
 			setCartItems([])
 		} catch (error) {
 			alert('К сожалению, ваш заказ не оформился :(')
+			console.error(error)
 		}
 		setIsLoading(false)
 	}

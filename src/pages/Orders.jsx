@@ -2,10 +2,8 @@ import React from 'react'
 import axios from 'axios'
 
 import Card from '../components/Card'
-import AppContext from '../context'
 
 function Orders() {
-	const { onAddToFavorite, onAddToCart } = React.useContext(AppContext)
 	const [orders, setOrders] = React.useState([false])
 	const [isLoading, setIsLoading] = React.useState(true)
 
@@ -29,15 +27,13 @@ function Orders() {
 			<h1>Мои заказы</h1>
 
 			<div className='d-flex flex-wrap'>
-				{orders.map(item => (
-					<Card
-						key={item.id}
-						onFavorite={obj => onAddToFavorite(obj)}
-						onPlus={obj => onAddToCart(obj)}
-						loading={isLoading}
-						{...item}
-					/>
-				))}
+				{isLoading
+					? Array.from(Array(7), (_, index) => (
+							<Card key={index} loading={isLoading} />
+					  ))
+					: orders.map(item => (
+							<Card key={item.id} loading={isLoading} {...item} />
+					  ))}
 			</div>
 		</div>
 	)
